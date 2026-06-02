@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CreneauxRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -28,6 +30,20 @@ class Creneaux
 
     #[ORM\Column(nullable: true)]
     private ?bool $actif = null;
+
+    /**
+     * @var Collection<int, RendezVous>
+     */
+    #[ORM\OneToMany(targetEntity: RendezVous::class, mappedBy: 'creneau')]
+    private Collection $rendezVouses;
+
+    #[ORM\ManyToOne(inversedBy: 'creneau')]
+    private ?Medecins $medecins = null;
+
+    public function __construct()
+    {
+        $this->rendezVouses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -90,6 +106,48 @@ class Creneaux
     public function setActif(?bool $actif): static
     {
         $this->actif = $actif;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RendezVous>
+     */
+    public function getRendezVouses(): Collection
+    {
+        return $this->rendezVouses;
+    }
+
+    public function addRendezVouse(RendezVous $rendezVouse): static
+    {
+        if (!$this->rendezVouses->contains($rendezVouse)) {
+            $this->rendezVouses->add($rendezVouse);
+            $rendezVouse->setCreneau($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRendezVouse(RendezVous $rendezVouse): static
+    {
+        if ($this->rendezVouses->removeElement($rendezVouse)) {
+            // set the owning side to null (unless already changed)
+            if ($rendezVouse->getCreneau() === $this) {
+                $rendezVouse->setCreneau(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getMedecins(): ?Medecins
+    {
+        return $this->medecins;
+    }
+
+    public function setMedecins(?Medecins $medecins): static
+    {
+        $this->medecins = $medecins;
 
         return $this;
     }

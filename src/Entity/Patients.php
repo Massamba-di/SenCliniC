@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PatientsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PatientsRepository::class)]
@@ -30,6 +32,24 @@ class Patients
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
+
+    /**
+     * @var Collection<int, RendezVous>
+     */
+    #[ORM\OneToMany(targetEntity: RendezVous::class, mappedBy: 'patients')]
+    private Collection $rendezVous;
+
+    /**
+     * @var Collection<int, Paiements>
+     */
+    #[ORM\OneToMany(targetEntity: Paiements::class, mappedBy: 'patients')]
+    private Collection $paiement;
+
+    public function __construct()
+    {
+        $this->rendezVous = new ArrayCollection();
+        $this->paiement = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -104,6 +124,66 @@ class Patients
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RendezVous>
+     */
+    public function getRendezVous(): Collection
+    {
+        return $this->rendezVous;
+    }
+
+    public function addRendezVou(RendezVous $rendezVou): static
+    {
+        if (!$this->rendezVous->contains($rendezVou)) {
+            $this->rendezVous->add($rendezVou);
+            $rendezVou->setPatients($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRendezVou(RendezVous $rendezVou): static
+    {
+        if ($this->rendezVous->removeElement($rendezVou)) {
+            // set the owning side to null (unless already changed)
+            if ($rendezVou->getPatients() === $this) {
+                $rendezVou->setPatients(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Paiements>
+     */
+    public function getPaiement(): Collection
+    {
+        return $this->paiement;
+    }
+
+    public function addPaiement(Paiements $paiement): static
+    {
+        if (!$this->paiement->contains($paiement)) {
+            $this->paiement->add($paiement);
+            $paiement->setPatients($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaiement(Paiements $paiement): static
+    {
+        if ($this->paiement->removeElement($paiement)) {
+            // set the owning side to null (unless already changed)
+            if ($paiement->getPatients() === $this) {
+                $paiement->setPatients(null);
+            }
+        }
 
         return $this;
     }

@@ -32,6 +32,9 @@ class Paiements
     #[ORM\Column(nullable: true)]
     private ?\DateTime $dateConfirmation = null;
 
+    #[ORM\ManyToOne(inversedBy: 'paiement')]
+    private ?Patients $patients = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +108,18 @@ class Paiements
     public function setDateConfirmation(?\DateTime $dateConfirmation): static
     {
         $this->dateConfirmation = $dateConfirmation;
+
+        return $this;
+    }
+
+    public function getPatients(): ?Patients
+    {
+        return $this->patients;
+    }
+
+    public function setPatients(?Patients $patients): static
+    {
+        $this->patients = $patients;
 
         return $this;
     }

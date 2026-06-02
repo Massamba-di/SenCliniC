@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MedecinsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -46,6 +48,24 @@ class Medecins
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0, nullable: true)]
     private ?string $tarifConsultation = null;
+
+    /**
+     * @var Collection<int, RendezVous>
+     */
+    #[ORM\OneToMany(targetEntity: RendezVous::class, mappedBy: 'medecin')]
+    private Collection $rendezVouses;
+
+    /**
+     * @var Collection<int, Creneaux>
+     */
+    #[ORM\OneToMany(targetEntity: Creneaux::class, mappedBy: 'medecins')]
+    private Collection $creneau;
+
+    public function __construct()
+    {
+        $this->rendezVouses = new ArrayCollection();
+        $this->creneau = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -180,6 +200,66 @@ class Medecins
     public function setTarifConsultation(?string $tarifConsultation): static
     {
         $this->tarifConsultation = $tarifConsultation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RendezVous>
+     */
+    public function getRendezVouses(): Collection
+    {
+        return $this->rendezVouses;
+    }
+
+    public function addRendezVouse(RendezVous $rendezVouse): static
+    {
+        if (!$this->rendezVouses->contains($rendezVouse)) {
+            $this->rendezVouses->add($rendezVouse);
+            $rendezVouse->setMedecin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRendezVouse(RendezVous $rendezVouse): static
+    {
+        if ($this->rendezVouses->removeElement($rendezVouse)) {
+            // set the owning side to null (unless already changed)
+            if ($rendezVouse->getMedecin() === $this) {
+                $rendezVouse->setMedecin(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Creneaux>
+     */
+    public function getCreneau(): Collection
+    {
+        return $this->creneau;
+    }
+
+    public function addCreneau(Creneaux $creneau): static
+    {
+        if (!$this->creneau->contains($creneau)) {
+            $this->creneau->add($creneau);
+            $creneau->setMedecins($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreneau(Creneaux $creneau): static
+    {
+        if ($this->creneau->removeElement($creneau)) {
+            // set the owning side to null (unless already changed)
+            if ($creneau->getMedecins() === $this) {
+                $creneau->setMedecins(null);
+            }
+        }
 
         return $this;
     }

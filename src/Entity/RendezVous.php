@@ -38,6 +38,18 @@ class RendezVous
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'rendezVous')]
+    private ?Patients $patients = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Paiements $paiement = null;
+
+    #[ORM\ManyToOne(inversedBy: 'rendezVouses')]
+    private ?Creneaux $creneau = null;
+
+    #[ORM\ManyToOne(inversedBy: 'rendezVouses')]
+    private ?Medecins $medecin = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -135,6 +147,54 @@ class RendezVous
     public function setUpdatedAt(?\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getPatients(): ?Patients
+    {
+        return $this->patients;
+    }
+
+    public function setPatients(?Patients $patients): static
+    {
+        $this->patients = $patients;
+
+        return $this;
+    }
+
+    public function getPaiement(): ?Paiements
+    {
+        return $this->paiement;
+    }
+
+    public function setPaiement(?Paiements $paiement): static
+    {
+        $this->paiement = $paiement;
+
+        return $this;
+    }
+
+    public function getCreneau(): ?Creneaux
+    {
+        return $this->creneau;
+    }
+
+    public function setCreneau(?Creneaux $creneau): static
+    {
+        $this->creneau = $creneau;
+
+        return $this;
+    }
+
+    public function getMedecin(): ?Medecins
+    {
+        return $this->medecin;
+    }
+
+    public function setMedecin(?Medecins $medecin): static
+    {
+        $this->medecin = $medecin;
 
         return $this;
     }
