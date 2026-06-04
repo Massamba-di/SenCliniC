@@ -38,8 +38,7 @@ class RendezVous
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'rendezVous')]
-    private ?Patients $patients = null;
+
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Paiements $paiement = null;
@@ -49,6 +48,9 @@ class RendezVous
 
     #[ORM\ManyToOne(inversedBy: 'rendezVouses')]
     private ?Medecins $medecin = null;
+
+    #[ORM\ManyToOne(inversedBy: 'rendezVous')]
+    private ?Patients $patients = null;
 
     public function getId(): ?int
     {
@@ -151,17 +153,7 @@ class RendezVous
         return $this;
     }
 
-    public function getPatients(): ?Patients
-    {
-        return $this->patients;
-    }
 
-    public function setPatients(?Patients $patients): static
-    {
-        $this->patients = $patients;
-
-        return $this;
-    }
 
     public function getPaiement(): ?Paiements
     {
@@ -195,6 +187,18 @@ class RendezVous
     public function setMedecin(?Medecins $medecin): static
     {
         $this->medecin = $medecin;
+
+        return $this;
+    }
+
+    public function getPatients(): ?Patients
+    {
+        return $this->patients;
+    }
+
+    public function setPatients(?Patients $patients): static
+    {
+        $this->patients = $patients;
 
         return $this;
     }

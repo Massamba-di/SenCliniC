@@ -32,8 +32,10 @@ class Paiements
     #[ORM\Column(nullable: true)]
     private ?\DateTime $dateConfirmation = null;
 
-    #[ORM\ManyToOne(inversedBy: 'paiement')]
+    #[ORM\ManyToOne(inversedBy: 'paiements')]
     private ?Patients $patients = null;
+
+
 
     public function getId(): ?int
     {
@@ -123,4 +125,6 @@ class Paiements
 
         return $this;
     }
+
+
 }

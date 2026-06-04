@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Medecins{% endblock %}
+
+{% block body %}
+    <h1>Medecins</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ medecin.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ medecin.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ medecin.prenom }}</td>
+            </tr>
+            <tr>
+                <th>Specialite</th>
+                <td>{{ medecin.specialite }}</td>
+            </tr>
+            <tr>
+                <th>NumeroLicence</th>
+                <td>{{ medecin.numeroLicence }}</td>
+            </tr>
+            <tr>
+                <th>Biographie</th>
+                <td>{{ medecin.biographie }}</td>
+            </tr>
+            <tr>
+                <th>Photo</th>
+                <td>{{ medecin.photo }}</td>
+            </tr>
+            <tr>
+                <th>JoursTravail</th>
+                <td>{{ medecin.joursTravail ? medecin.joursTravail|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>HeureDebut</th>
+                <td>{{ medecin.heureDebut ? medecin.heureDebut|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>HeureFin</th>
+                <td>{{ medecin.heureFin ? medecin.heureFin|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DureeConsultation</th>
+                <td>{{ medecin.dureeConsultation }}</td>
+            </tr>
+            <tr>
+                <th>TarifConsultation</th>
+                <td>{{ medecin.tarifConsultation }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_medecins_index') }}">back to list</a>
+
+    <a href="{{ path('app_medecins_edit', {'id': medecin.id}) }}">edit</a>
+
+    {{ include('medecins/_delete_form.html.twig') }}
+{% endblock %}

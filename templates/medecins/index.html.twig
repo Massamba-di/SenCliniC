@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Medecins index{% endblock %}
+
+{% block body %}
+    <h1>Medecins index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Specialite</th>
+                <th>NumeroLicence</th>
+                <th>Biographie</th>
+                <th>Photo</th>
+                <th>JoursTravail</th>
+                <th>HeureDebut</th>
+                <th>HeureFin</th>
+                <th>DureeConsultation</th>
+                <th>TarifConsultation</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for medecin in medecins %}
+            <tr>
+                <td>{{ medecin.id }}</td>
+                <td>{{ medecin.nom }}</td>
+                <td>{{ medecin.prenom }}</td>
+                <td>{{ medecin.specialite }}</td>
+                <td>{{ medecin.numeroLicence }}</td>
+                <td>{{ medecin.biographie }}</td>
+                <td>{{ medecin.photo }}</td>
+                <td>{{ medecin.joursTravail ? medecin.joursTravail|json_encode : '' }}</td>
+                <td>{{ medecin.heureDebut ? medecin.heureDebut|date('H:i:s') : '' }}</td>
+                <td>{{ medecin.heureFin ? medecin.heureFin|date('H:i:s') : '' }}</td>
+                <td>{{ medecin.dureeConsultation }}</td>
+                <td>{{ medecin.tarifConsultation }}</td>
+                <td>
+                    <a href="{{ path('app_medecins_show', {'id': medecin.id}) }}">show</a>
+                    <a href="{{ path('app_medecins_edit', {'id': medecin.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="13">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_medecins_new') }}">Create new</a>
+{% endblock %}
