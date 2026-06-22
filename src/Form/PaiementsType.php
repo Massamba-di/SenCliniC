@@ -6,6 +6,9 @@ use App\Entity\Paiements;
 use App\Entity\Patients;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,15 +17,32 @@ class PaiementsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('montant')
-            ->add('methodePaiement')
-            ->add('statut')
-            ->add('datePaiement')
+            ->add('montant',MoneyType::class,[] )
+            ->add('methodePaiement',ChoiceType::class,[
+                'choices'=> [
+                    'carte bancaire'=>'carte bancaire',
+                    'orange money'=>'orange money',
+                    'wave'=> 'wave',
+
+                ],
+                'multiple'=>false,
+                'expanded'=>true,
+
+            ])
+            ->add('statut',ChoiceType::class,[
+                'choices'=> [
+                    'payé'=>'payé',
+                    'en attente'=>'en attente',
+
+                ]
+
+            ])
+            ->add('datePaiement',DateType::class,[])
             ->add('referenceTransaction')
-            ->add('dateConfirmation')
+            ->add('dateConfirmation',DateType::class,[])
             ->add('patients', EntityType::class, [
                 'class' => Patients::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nom',
             ])
         ;
     }

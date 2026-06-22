@@ -263,4 +263,18 @@ class Medecins
 
         return $this;
     }
+    public function isDisponible(): bool
+    {
+        $now = new \DateTime();
+        foreach ($this->creneau as $creneau) {
+            if (
+                $creneau->isActif() &&
+                $creneau->getPlacesDisponibles() > 0 &&
+                $creneau->getDate() >= $now
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

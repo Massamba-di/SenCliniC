@@ -9,6 +9,8 @@ use App\Entity\Patients;
 use App\Entity\RendezVous;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,15 +19,13 @@ class RendezVousType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('date')
-            ->add('heure')
+            ->add('date',DateType::class,[])
+            ->add('heure',TimeType::class,[])
             ->add('status')
             ->add('montant')
             ->add('motif')
             ->add('notes')
-            ->add('createdAt', null, [
-                'widget' => 'single_text',
-            ])
+
             ->add('updatedAt')
             ->add('paiement', EntityType::class, [
                 'class' => Paiements::class,
@@ -37,11 +37,11 @@ class RendezVousType extends AbstractType
             ])
             ->add('medecin', EntityType::class, [
                 'class' => Medecins::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nom',
             ])
             ->add('patients', EntityType::class, [
                 'class' => Patients::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nom',
             ])
         ;
     }

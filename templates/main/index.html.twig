@@ -3,18 +3,121 @@
 {% block title %}Hello MainController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<header>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+</header>
+    <main>
+        <section class="first">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/home/massamba/SenCliniC/app/src/Controller/MainController.php</code></li>
-        <li>Your template at <code>/home/massamba/SenCliniC/app/templates/main/index.html.twig</code></li>
-    </ul>
-</div>
+
+            <h1>Votre santé à porté de Clic</h1>
+            <p>Trouvez un médecin, prenez rendez-vous en ligne, accédez aux pharmacies de garde</p>
+
+                <div class="link1">
+                    <a href="{{path('app_medecins')}}"><i class="bi bi-person-badge"></i> Médecins</a>
+                    <a href="{{ path('app_pharmacies') }}"><i class="bi bi-prescription2"></i>Pharmacies</a>
+
+
+                </div>
+                <form>
+                    <input type="search" name="search" placeholder="cardialogue">
+                    <button type="submit"><i class="bi bi-search"></i> <span class="btn-text">Rechercher</span></button>
+                </form>
+<div class="link2">
+                <a href="{{path('app_medecins')}}"><i class="bi bi-person-badge"></i> Médecins</a>
+            <a href="{{ path('app_pharmacies') }}"><i class="bi bi-prescription2"></i>Pharmacies</a>
+
+
+            </div>
+
+
+        </section>
+        <section class="second">
+
+                    <div>
+                        <span>+150</span>
+                    <span>Médecins</span>
+                    </div>
+                    <div>
+                       <span>+80 </span>
+                   <span>Pharmacies</span>
+                   </div>
+                    <div>
+                        <span>+5000</span>
+                    <span>Patients</span>
+                    </div>
+                    <div>
+                      <span>+12000 </span>
+                  <span>Rendez-Vous</span>
+                  </div>
+
+
+
+        </section>
+        <section class="third">
+            <h2>Medecins populaires</h2>
+            <div class="profil">
+            {% for medecin in medecins %}
+
+                <figure>
+                <img src="{{ asset('uploads/medecins/' ~ medecin.photo) }}" alt="{{ medecin.nom }}">
+                    <figcaption>
+                        <span><strong>Dr {{ medecin.nom }}</strong></span>
+                        <span>{{ medecin.specialite }}</span>
+
+
+                    </figcaption>
+                    <div class="disponibilité">
+                    {% if medecin.disponible %}
+                        <span class="dispo">dispo</span>
+                    {% else %}
+                        <span class="indispo">indispo</span>
+                    {% endif %}
+                    </div>
+
+                   <a href="#">Prendre rendez vous</a>
+
+                </figure>
+
+            {% endfor %}
+                </div>
+        </section>
+        <section class="fourth">
+            <h3>Pharmacies de garde</h3>
+            <div class="Pharma">
+            {% for pharmacie in pharmacies %}
+                {% if pharmacie.gardeAujourdhui %}
+
+                <article>
+
+                    <span class="icon"><i class="bi bi-capsule"></i></span>
+
+                        <div class=" pharmalocal">
+                            <span><strong>{{ pharmacie.nom }}</strong></span>
+                        <span><i class="bi bi-geo-alt">Saint-Louis</i></span>
+
+
+                    </div>
+                    <span class="garde">En garde</span>
+                    <div class="details">
+                        <a href="{{ path('app_pharmacies_show', { id: pharmacie.id }) }}) }}">Voir details</a>
+                        </div>
+
+
+
+                </article>
+
+
+
+                {% endif %}
+            {% endfor %}
+                    </div>
+
+        </section>
+
+    </main>
+    <footer>
+
+    </footer>
+
 {% endblock %}

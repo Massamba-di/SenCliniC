@@ -10,11 +10,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/medecins')]
 final class MedecinsController extends AbstractController
 {
-    #[Route(name: 'app_medecins_index', methods: ['GET'])]
+    #[Route(name: 'app_medecins', methods: ['GET'])]
     public function index(MedecinsRepository $medecinsRepository): Response
     {
         return $this->render('medecins/index.html.twig', [
@@ -23,17 +24,31 @@ final class MedecinsController extends AbstractController
     }
 
     #[Route('/new', name: 'app_medecins_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,SluggerInterface $slugger): Response
     {
         $medecin = new Medecins();
         $form = $this->createForm(MedecinsType::class, $medecin);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('photo')->getData();
+
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+                $imageFile->move(
+                    $this->getParameter('uploads_directory'),
+                    $newFilename
+                );
+
+                $medecin->setPhoto($newFilename);
+            }
             $entityManager->persist($medecin);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_medecins_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_medecins', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('medecins/new.html.twig', [
@@ -51,12 +66,26 @@ final class MedecinsController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_medecins_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Medecins $medecin, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Medecins $medecin, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(MedecinsType::class, $medecin);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('photo')->getData();
+
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+                $imageFile->move(
+                    $this->getParameter('uploads_directory'),
+                    $newFilename
+                );
+
+                $medecin->setPhoto($newFilename);
+            }
             $entityManager->flush();
 
             return $this->redirectToRoute('app_medecins_index', [], Response::HTTP_SEE_OTHER);

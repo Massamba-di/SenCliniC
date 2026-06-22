@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/pharmacies')]
 final class PharmaciesController extends AbstractController
 {
-    #[Route(name: 'app_pharmacies_index', methods: ['GET'])]
+    #[Route(name: 'app_pharmacies', methods: ['GET'])]
     public function index(PharmaciesRepository $pharmaciesRepository): Response
     {
         return $this->render('pharmacies/index.html.twig', [
@@ -59,7 +59,7 @@ final class PharmaciesController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_pharmacies_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_pharmacies', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('pharmacies/edit.html.twig', [
